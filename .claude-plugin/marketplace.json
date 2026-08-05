@@ -12,10 +12,8 @@
       "name": "mcp-vision-bridge",
       "description": "Give your text-only agent eyes: analyze_image MCP tool, vision skill, and auto-loop clipboard hook. Bring your own multimodal model (mimo, Claude, Gemini, GPT-4o).",
       "source": {
-        "source": "git-subdir",
+        "source": "url",
         "url": "https://github.com/KuaaMU/mcp-vision-bridge.git",
-        "path": ".",
-        "ref": "main",
         "sha": "9d86c1edf464bde825cd367be1c688cffea0d036"
       },
       "category": "development"
