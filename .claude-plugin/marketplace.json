@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "agent-plugins",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Claude Code plugin marketplace by KuaaMU: curated plugins that extend coding agents. Add with: claude plugin marketplace add KuaaMU/agent-plugins",
   "owner": {
     "name": "KuaaMU",
@@ -14,7 +14,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/KuaaMU/mcp-vision-bridge.git",
-        "sha": "9d86c1edf464bde825cd367be1c688cffea0d036"
+        "sha": "a296a05d"
       },
       "category": "development"
     }
