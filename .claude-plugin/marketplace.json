@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agent-plugins",
+  "version": "0.1.0",
+  "description": "Claude Code plugin marketplace by KuaaMU: curated plugins that extend coding agents. Add with: claude plugin marketplace add KuaaMU/agent-plugins",
+  "owner": {
+    "name": "KuaaMU",
+    "email": "XCM853629353@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "mcp-vision-bridge",
+      "description": "Give your text-only agent eyes: analyze_image MCP tool, vision skill, and auto-loop clipboard hook. Bring your own multimodal model (mimo, Claude, Gemini, GPT-4o).",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/KuaaMU/mcp-vision-bridge.git",
+        "path": ".",
+        "ref": "main",
+        "sha": "9d86c1edf464bde825cd367be1c688cffea0d036"
+      },
+      "category": "development"
+    }
+  ]
+}
