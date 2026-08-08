@@ -1,0 +1,4 @@
+interface:
+  display_name: "自适应任务"
+  short_description: "通用最小计划、漂移感知、真实验证的长期工程任务总纲"
+  default_prompt: "使用 $adaptive-mission 以最小计划和漂移感知检查点推进长期工程任务，并在真实环境验证后交付。"

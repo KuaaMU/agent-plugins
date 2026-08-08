@@ -1,7 +1,7 @@
 # agent-plugins
 
 Claude Code plugin marketplace by [KuaaMU](https://github.com/KuaaMU). A single
-place to discover and install plugins that extend your coding agent.
+place to discover and install plugins and skills that extend your coding agent.
 
 ## Install the marketplace
 
@@ -14,6 +14,15 @@ claude plugin marketplace add KuaaMU/agent-plugins
 | Plugin | What it does | Install |
 |---|---|---|
 | [mcp-vision-bridge](https://github.com/KuaaMU/mcp-vision-bridge) | Give your text-only agent (DeepSeek V4 Flash, Qwen, Kimi) vision: an `analyze_image` MCP tool, a `vision` skill, and an auto-loop clipboard hook. Routes images through any multimodal model you choose. | `claude plugin install mcp-vision-bridge` |
+
+## Codex skills
+
+Cross-agent skills live under [skills/](skills/). They work with Claude Code,
+Codex, opencode, and other agents that support `SKILL.md`.
+
+| Skill | What it does | Install |
+|---|---|---|
+| [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/adaptive-mission` |
 
 ## Adding a new plugin
 
