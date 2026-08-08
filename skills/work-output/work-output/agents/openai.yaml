@@ -1,4 +1,0 @@
-interface:
-  display_name: "工作产出"
-  short_description: "四轨产出加案例草稿与episode积压，含发布提案"
-  default_prompt: "使用 $work-output 收尾任务：生成分层简报、四轨产出与案例草稿候选，登记 episode 积压，并按发布闸门提出发布提案。"

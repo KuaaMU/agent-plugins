@@ -1,7 +1,7 @@
 ---
 name: work-output
 description: >-
-  把任务过程沉淀成四轨工作产出：任务轨交付物与证据、过程轨可复现命令与失败记录、复用轨 skill/模板/经验、公开轨案例/文章/训练语料。用于任何工程、研究或创作任务收尾时生成分层简报（一句话/五行/证据附录）、维护 OUTPUTS.md 与 LEARN.md、按发布闸门脱敏并许可后开源沉淀，并把任务轨迹转成适合下一代模型训练的结构化 episode。当用户希望工作产出反补自己、帮助理解任务、对外展示价值或作为训练语料时使用。
+  把任务过程沉淀成四轨工作产出：任务轨交付物与证据、过程轨可复现命令与失败记录、复用轨 skill/模板/经验、公开轨案例草稿/文章/开源仓库/训练语料。用于任何工程、研究或创作任务收尾时生成分层简报（一句话/五行/证据附录）、维护 OUTPUTS.md 与 LEARN.md、按发布闸门脱敏并许可后开源沉淀；公开轨可产出面向传播的案例草稿，把任务轨迹批量积累成结构化 episode 积压库，并定期主动维护与提出发布提案（最终发布仍需用户批准）。当用户希望工作产出反补自己、帮助理解任务、对外展示价值或作为训练语料时使用。
 ---
 
 # Work Output
@@ -45,9 +45,19 @@ description: >-
 - 任务轨：交付物 + 出口证据，属于用户验收。
 - 过程轨：可复现命令、环境、失败与 BLOCKED、回滚路径，反补自己。
 - 复用轨：LEARN 条目、skill、模板、提示词、checklist，攒够就固化。
-- 公开轨：案例、文章、开源仓库、结构化 episode；必须过发布闸门。
+- 公开轨：案例草稿、文章、开源仓库、结构化 episode 积压；必须过发布闸门。
 
 细节与清单见 references/four-tracks.md。
+
+## 案例草稿（公开轨）
+
+当 OUTPUTS.md 公开轨出现“可发布”候选，且用户表达对外展示意图时，产出案例草稿：
+
+- 目标：把一次任务变成可传播的故事，而不是结构化清单。
+- 内容：标题、摘要、背景问题、方案与取舍、证据与结果、教训、链接、脱敏声明。
+- 规则：每项目最多一篇主案例；草稿不算已发布，发布仍需过发布闸门；默认不自动写。
+
+模板见 references/case-study.md。
 
 ## 结构化 episode（训练语料候选）
 
@@ -55,7 +65,21 @@ description: >-
 
 只整理高质量、已脱敏、有许可证的 episode；原始聊天记录不直接作为语料。
 
-格式与示例见 references/episode-format.md。
+每份 episode 都登记进 EPISODES.md 积压索引，默认 training_usage=not-allowed；积累到一定数量或定期整理成带许可证的数据集仓库，发布前逐份确认授权与脱敏。
+
+格式与示例见 references/episode-format.md；积累规则见 references/episode-backlog.md。
+
+## 主动维护与发布提案
+
+不只在任务收尾时整理产出，还要在以下节点主动维护：
+
+- 每个检查点：更新 OUTPUTS.md / EPISODES.md 的状态。
+- 任务里程碑：验收通过、开源完成、数据集积累满 N 份。
+- 定期：每周或每月审查公开轨与积压库，把成熟候选升级为发布提案。
+
+发布提案必须包含：产出链接、发布理由（传播价值/时效/完整度）、建议时机（趁热发布/凑批发布/延后）、风险（隐私/夸大/维护负担）。提案等用户批准后才执行，agent 不自行发布。
+
+规则与模板见 references/active-maintenance.md。
 
 ## 发布闸门
 
@@ -65,6 +89,7 @@ description: >-
 - 许可：明确 MIT/CC-BY 等，声明是否允许训练。
 - 可复现：命令与数据可重复，结果不夸大。
 - 价值：一篇案例胜于十篇流水账；每项目最多一篇主案例 + 一个可复用资产。
+- 用户批准：提案必须经用户显式同意后才发布；agent 不自行发布。
 
 检查表见 references/publication-gate.md。
 
@@ -74,6 +99,9 @@ description: >-
 - references/layered-brief.md：三层简报模板与示例。
 - references/distillation-rules.md：检查点蒸馏规则与 LEARN 写法。
 - references/episode-format.md：结构化 episode schema 与示例。
+- references/episode-backlog.md：episode 批量积累与数据集发布。
+- references/case-study.md：案例草稿模板与触发条件。
+- references/active-maintenance.md：主动维护与发布提案规则。
 - references/publication-gate.md：发布前检查表与许可说明。
 
 ## 与 adaptive-mission 的关系

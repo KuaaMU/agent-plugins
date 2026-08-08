@@ -13,9 +13,11 @@ episode 是把一次任务整理成带结果标签的过程监督数据，供下
     "date": "2026-08-08",
     "task_type": "operator-dev | hardware-debug | research | integration",
     "tools": ["codex", "claude-code"],
-    "models": ["deepseek-v4-flash"],
-    "license": "MIT",
-    "privacy_status": "scrubbed"
+  "models": ["deepseek-v4-flash"],
+  "license": "MIT",
+  "privacy_status": "scrubbed",
+  "training_usage": "not-allowed-by-default",
+  "status": "draft"
   },
   "goal": "原始目标",
   "context": [
@@ -47,6 +49,13 @@ episode 是把一次任务整理成带结果标签的过程监督数据，供下
 
 - 发布前必须脱敏：无密钥、Token、IP、串口、姓名、组织内部路径。
 - 明确许可证，并声明是否允许用于模型训练。
+- 默认 training_usage=not-allowed-by-default，作者显式授权后才改为 allowed。
 - 不包含第三方版权内容；引用只留来源链接。
 - actions 必须带 result 和 decision，否则不构成过程监督数据。
 - reflection 必须有 outcome 标签，不让下游猜测成败。
+
+## 积压登记
+
+- 每份 episode 生成后登记进 EPISODES.md：id、日期、任务类型、状态、训练授权、文件路径。
+- 默认 status=draft；脱敏通过后改 scrubbed；作者授权训练后改 authorized；发布后改 published。
+- 登记行示例：`ep-2026-08-08-001 | 2026-08-08 | integration | draft | not-allowed-by-default | episodes/ep-2026-08-08-001.json`
