@@ -23,6 +23,7 @@ Codex, opencode, and other agents that support `SKILL.md`.
 | Skill | What it does | Install |
 |---|---|---|
 | [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/adaptive-mission` |
+| [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, and structured training episodes behind a publication gate. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/work-output` |
 
 ## Adding a new plugin
 
