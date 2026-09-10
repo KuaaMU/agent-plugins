@@ -25,6 +25,15 @@ Codex, opencode, and other agents that support `SKILL.md`.
 | [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/adaptive-mission` |
 | [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, case-study drafts, and an episode backlog, with proactive publication proposals behind a user-approved gate. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/work-output` |
 
+### External skills
+
+Skills maintained in their own repositories remain independently versioned; this
+marketplace only indexes them.
+
+| Skill | Source | Install |
+|---|---|---|
+| [ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) | [KuaaMU/ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/ascend-operator-tackling --path skills/ascend-operator-tackling` |
+
 ## Adding a new plugin
 
 Each plugin lives in its own repository (best practice — one plugin per repo,
