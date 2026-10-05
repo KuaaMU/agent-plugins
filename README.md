@@ -2,79 +2,95 @@
 
 [![skills.sh](https://skills.sh/b/KuaaMU/agent-plugins)](https://skills.sh/KuaaMU/agent-plugins)
 
-Claude Code plugin marketplace by [KuaaMU](https://github.com/KuaaMU). A single
-place to discover and install plugins and skills that extend your coding agent.
+Cross-agent skills and plugins by [KuaaMU](https://github.com/KuaaMU).
 
-## Install skills
+Skills here are plain [`SKILL.md`](https://agentskills.io) directories — they work
+in Claude Code, Codex, opencode, Cursor, and anything else that reads
+`SKILL.md`. Plugins are Claude Code specific.
+
+## Install
 
 ```bash
 npx skills add KuaaMU/agent-plugins
 ```
 
-## Install the marketplace
+That installs every skill. To pick one:
+
+```bash
+npx skills add KuaaMU/agent-plugins --skill long-horizon-skills
+```
+
+The CLI writes to `~/.agents/skills/` and links or copies into whichever agent
+directories it finds. `--agent codex` narrows it, `--global` skips the project
+scope, `-y` skips the prompt. Run `npx skills add --help` for the rest.
+
+### Claude Code plugins
 
 ```bash
 claude plugin marketplace add KuaaMU/agent-plugins
+claude plugin install mcp-vision-bridge
 ```
 
-## Available plugins
+## Skills
 
-| Plugin | What it does | Install |
-|---|---|---|
-| [mcp-vision-bridge](https://github.com/KuaaMU/mcp-vision-bridge) | Give your text-only agent (DeepSeek V4 Flash, Qwen, Kimi) vision: an `analyze_image` MCP tool, a `vision` skill, and an auto-loop clipboard hook. Routes images through any multimodal model you choose. | `claude plugin install mcp-vision-bridge` |
+| Skill | What it does |
+|---|---|
+| [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. |
+| [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, case-study drafts, and an episode backlog, with proactive publication proposals behind a user-approved gate. |
+| [long-horizon-skills](skills/long-horizon-skills) | Anti-drift toolbox for hitting a hard numeric target over weeks: guards against framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, and evidence-strength mismatch. Ships the §1–§10 protocol, shape→execution-family derivation, upstream reconnaissance, structured state with sparse patches, a JSONL claims-ledger linter, and an independent auditor agent. |
 
-## Codex skills
-
-Cross-agent skills live under [skills/](skills/). They work with Claude Code,
-Codex, opencode, and other agents that support `SKILL.md`.
-
-| Skill | What it does | Install |
-|---|---|---|
-| [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/adaptive-mission` |
-| [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, case-study drafts, and an episode backlog, with proactive publication proposals behind a user-approved gate. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/work-output` |
-| [long-horizon-skills](skills/long-horizon-skills) | Anti-drift toolbox for hitting a hard numeric target over weeks: guards against framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, and evidence-strength mismatch. Ships the §1–§10 protocol, shape→execution-family derivation, upstream reconnaissance, structured state with sparse patches, a JSONL claims-ledger linter, and an independent auditor agent. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/long-horizon-skills` |
+Each is self-contained; install only the ones you want.
 
 ### External skills
 
-Skills maintained in their own repositories remain independently versioned; this
-marketplace only indexes them.
+Maintained in their own repositories, so they version independently. This repo
+only indexes them.
 
-| Skill | Source | Install |
-|---|---|---|
-| [ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) | [KuaaMU/ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/ascend-operator-tackling --path skills/ascend-operator-tackling` |
+| Skill | Source |
+|---|---|
+| [ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) | [KuaaMU/ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) |
 
-## Adding a new plugin
+## Plugins
 
-Each plugin lives in its own repository (best practice — one plugin per repo,
-self-referencing `source: "./"`). To add it here, append an entry to
-[`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) using
-`git-subdir` (or `url`) pointing at the plugin repo:
+Claude Code only.
+
+| Plugin | What it does |
+|---|---|
+| [mcp-vision-bridge](https://github.com/KuaaMU/mcp-vision-bridge) | Give your text-only agent (DeepSeek V4 Flash, Qwen, Kimi) vision: an `analyze_image` MCP tool, a `vision` skill, and an auto-loop clipboard hook. Routes images through any multimodal model you choose. |
+
+## Adding a plugin
+
+One plugin per repo, self-referencing `source: "./"`. Append an entry to
+[`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json):
 
 ```json
 {
   "name": "your-plugin",
   "description": "One-line description.",
   "source": {
-    "source": "git-subdir",
+    "source": "url",
     "url": "https://github.com/you/your-plugin.git",
-    "path": ".",
-    "ref": "main",
     "sha": "<commit sha>"
   },
   "category": "development"
 }
 ```
 
-Then bump `version`, validate, and push:
+Then validate and push:
 
 ```bash
 claude plugin validate .
 git push
 ```
 
+Pin `sha` to a commit that exists — `claude plugin install` fails outright on a
+bad one. Bump it when you want a new version of the plugin out.
+
 ## Notes
 
-- The marketplace name `agent-plugins` signals that these extensions are
-  agent-oriented (skills are broadly compatible across Claude Code / Codex /
-  opencode; plugin and MCP mechanisms are per-platform).
-- For the source plugin repos, see each plugin's own README for usage.
+- Adding a skill needs no config: drop a directory with a `SKILL.md` under
+  `skills/` and add a row to the table above. The workspace globs the
+  directory.
+- `long-horizon-skills` ships three runnable scripts
+  (`claims_lint.py`, `state_patch.py`, `probe_liveness.sh`). The Python ones
+  are stdlib-only and self-test with `--self-test`; the shell one needs bash.

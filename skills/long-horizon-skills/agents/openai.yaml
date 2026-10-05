@@ -1,0 +1,4 @@
+interface:
+  display_name: "长程攻坚"
+  short_description: "硬指标多周攻坚的防失效规程，含结论台账 lint 与执行状态补丁"
+  default_prompt: "使用 $long-horizon-skills 攻坚这个硬性数值目标：先按形状推导执行家族并做上游侦察，再按 §1–§10 推进，用结构化状态和结论台账记录，只在真实环境证据充分时宣称达标。"
