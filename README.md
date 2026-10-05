@@ -1,7 +1,15 @@
 # agent-plugins
 
+[![skills.sh](https://skills.sh/b/KuaaMU/agent-plugins)](https://skills.sh/KuaaMU/agent-plugins)
+
 Claude Code plugin marketplace by [KuaaMU](https://github.com/KuaaMU). A single
 place to discover and install plugins and skills that extend your coding agent.
+
+## Install skills
+
+```bash
+npx skills add KuaaMU/agent-plugins
+```
 
 ## Install the marketplace
 
