@@ -1,0 +1,4 @@
+{"id": "C-001", "claim": "该形状的失败集合是这两例，缺口分别是 15.2% 与 0.6%", "grade": "已实测", "evidence": "failure-catalog.md", "derived_from": [], "valid_from": "2026-09-13", "invalidated_at": null, "invalidated_by": null, "recorder": "lead"}
+{"id": "C-002", "claim": "Cube 路径在该形状上比向量路径慢 28% 以上", "grade": "已实测", "evidence": "failure-catalog.md", "derived_from": [], "valid_from": "2026-09-13", "invalidated_at": null, "invalidated_by": null, "recorder": "lead"}
+{"id": "C-003", "claim": "「Cube 路径有 28% 余量」曾以 +260% 为依据被判不可行 —— 已撤销", "grade": "INVALID", "evidence": null, "derived_from": [], "valid_from": "2026-09-12", "invalidated_at": "2026-09-14", "invalidated_by": ["C-002"], "recorder": "lead"}
+{"id": "C-004", "claim": "因此该路由的下一步是为该形状新开一个家族，而不是继续调参", "grade": "未受攻击", "evidence": null, "derived_from": ["C-001", "C-002"], "valid_from": "2026-09-14", "invalidated_at": null, "invalidated_by": null, "recorder": "lead"}

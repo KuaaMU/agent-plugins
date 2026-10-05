@@ -32,6 +32,7 @@ Codex, opencode, and other agents that support `SKILL.md`.
 |---|---|---|
 | [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/adaptive-mission` |
 | [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, case-study drafts, and an episode backlog, with proactive publication proposals behind a user-approved gate. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/work-output` |
+| [long-horizon-skills](skills/long-horizon-skills) | Anti-drift toolbox for hitting a hard numeric target over weeks: guards against framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, and evidence-strength mismatch. Ships the §1–§10 protocol, shape→execution-family derivation, upstream reconnaissance, structured state with sparse patches, a JSONL claims-ledger linter, and an independent auditor agent. | `python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo KuaaMU/agent-plugins --path skills/long-horizon-skills` |
 
 ### External skills
 

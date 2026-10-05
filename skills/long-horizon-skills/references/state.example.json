@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "task": "把端到端时延从 1.42× 基线降到 ≤1.00×",
+  "round": 4,
+  "frame": {
+    "name": "复用为大形状定尺寸的专用内核",
+    "status": "BLOCKED",
+    "falsifier": "已做：该内核在此形状上实测向量管占用已近饱和，结构项逐项排除",
+    "next_if_falsified": "为该形状新开一个按它自己的尺寸定的家族"
+  },
+  "failure_set": [
+    {
+      "case": "case-A（该形状出现频率最高）",
+      "gap_pct": -12.5
+    },
+    {
+      "case": "case-B（同族，形状略小）",
+      "gap_pct": -2.1
+    }
+  ],
+  "gap_now_pct": -11.9,
+  "gap_history": [
+    {
+      "round": 1,
+      "gap_pct": -12.5
+    },
+    {
+      "round": 2,
+      "gap_pct": -12.4
+    },
+    {
+      "round": 3,
+      "gap_pct": -11.9
+    }
+  ],
+  "budget_rounds": 12,
+  "excluded_paths": [
+    {
+      "path": "切换到矩阵单元",
+      "marker": "refuted",
+      "reason": "实测该形状下比向量路径慢 28% 以上",
+      "evidence": "evidence/<date>_cubepath/REFUTED.md"
+    },
+    {
+      "path": "把两次启动合并成一次",
+      "marker": "refuted",
+      "reason": "合并后丢失窗口间排序 ⇒ 全量精度门否掉",
+      "evidence": "evidence/<date>_pooled/REFUTED.md"
+    }
+  ],
+  "claims_ref": "CLAIMS.md"
+}
