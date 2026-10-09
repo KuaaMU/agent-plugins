@@ -1,0 +1,4 @@
+interface:
+  display_name: "个人数据仓库"
+  short_description: "跨 AI 可移植的个人记忆仓库：上手、落盘、策展、安全"
+  default_prompt: "使用 $personal-os 管理个人数据仓库：新会话先读 AGENTS.md，会话结束落盘同步，记忆按 Verified/Reusable/Stable 策展。"
