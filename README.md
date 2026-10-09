@@ -38,6 +38,7 @@ claude plugin install mcp-vision-bridge
 | [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. |
 | [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, case-study drafts, and an episode backlog, with proactive publication proposals behind a user-approved gate. |
 | [long-horizon-skills](skills/long-horizon-skills) | Anti-drift toolbox for hitting a hard numeric target over weeks: guards against framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, and evidence-strength mismatch. Ships the §1–§10 protocol, shape→execution-family derivation, upstream reconnaissance, structured state with sparse patches, a JSONL claims-ledger linter, and an independent auditor agent. |
+| [personal-os](skills/personal-os) | Cross-AI personal data vault methodology: private GitHub repo + AGENTS.md entry point + markdown memory any AI can onboard to. Session-start protocol, hard session-end sync discipline, curation bar (Verified/Reusable/Stable), security red lines, and zero-dependency vault-doctor scripts in Node and shell. Methodology is open source; your data stays private. |
 
 Each is self-contained; install only the ones you want.
 
