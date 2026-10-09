@@ -11,12 +11,10 @@ in Claude Code, Codex, opencode, Cursor, and anything else that reads
 ## Install
 
 ```bash
+# everything
 npx skills add KuaaMU/agent-plugins
-```
 
-That installs every skill. To pick one:
-
-```bash
+# just one
 npx skills add KuaaMU/agent-plugins --skill long-horizon-skills
 ```
 
@@ -31,25 +29,25 @@ claude plugin marketplace add KuaaMU/agent-plugins
 claude plugin install mcp-vision-bridge
 ```
 
+## Which skill do I need?
+
+| If you are… | Take |
+|---|---|
+| Tackling a hard numeric target over days/weeks (pass rate, latency) and keep "making progress" without converging | **long-horizon-skills** |
+| Running a long engineering or research mission and need drift-proof checkpoints | **adaptive-mission** |
+| Turning finished work into lessons, briefs, or publishable artifacts | **work-output** |
+| Building a private, cross-AI personal knowledge vault | **personal-os** |
+
 ## Skills
 
 | Skill | What it does |
 |---|---|
-| [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3-5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, and real-environment acceptance. |
-| [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. Generates layered briefs, OUTPUTS.md/LEARN.md, case-study drafts, and an episode backlog, with proactive publication proposals behind a user-approved gate. |
-| [long-horizon-skills](skills/long-horizon-skills) | Anti-drift toolbox for hitting a hard numeric target over weeks: guards against framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, and evidence-strength mismatch. Ships the §1–§10 protocol, shape→execution-family derivation, upstream reconnaissance, structured state with sparse patches, a JSONL claims-ledger linter, and an independent auditor agent. |
-| [personal-os](skills/personal-os) | Cross-AI personal data vault methodology: private GitHub repo + AGENTS.md entry point + markdown memory any AI can onboard to. Session-start protocol, hard session-end sync discipline, curation bar (Verified/Reusable/Stable), security red lines, and zero-dependency vault-doctor scripts in Node and shell. Methodology is open source; your data stays private. |
+| [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3–5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, real-environment acceptance. |
+| [long-horizon-skills](skills/long-horizon-skills) | Anti-failure + execution system for hard numeric targets over weeks: six failure modes (framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, evidence mismatch), trigger-style rules, independent auditor, JSON state machine, racing discipline, file hygiene, hard-set, and domain profiles. |
+| [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. |
+| [personal-os](skills/personal-os) | Cross-AI personal data vault methodology: private GitHub repo + AGENTS.md entry point + markdown memory any AI can onboard to. Session-start protocol, hard session-end sync discipline, curation bar, security red lines. |
 
 Each is self-contained; install only the ones you want.
-
-### External skills
-
-Maintained in their own repositories, so they version independently. This repo
-only indexes them.
-
-| Skill | Source |
-|---|---|
-| [ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) | [KuaaMU/ascend-operator-tackling](https://github.com/KuaaMU/ascend-operator-tackling) |
 
 ## Plugins
 
@@ -57,7 +55,13 @@ Claude Code only.
 
 | Plugin | What it does |
 |---|---|
-| [mcp-vision-bridge](https://github.com/KuaaMU/mcp-vision-bridge) | Give your text-only agent (DeepSeek V4 Flash, Qwen, Kimi) vision: an `analyze_image` MCP tool, a `vision` skill, and an auto-loop clipboard hook. Routes images through any multimodal model you choose. |
+| [mcp-vision-bridge](https://github.com/KuaaMU/mcp-vision-bridge) | Give your text-only agent vision: an `analyze_image` MCP tool, a `vision` skill, and an auto-loop clipboard hook. Routes images through any multimodal model you choose. |
+
+## Adding a skill
+
+No config needed: drop a directory with a `SKILL.md` under `skills/` and add a
+row to the table above. The workspace globs the directory. Keep `name` in the
+frontmatter identical to the directory name, or installers will skip it.
 
 ## Adding a plugin
 
@@ -85,13 +89,12 @@ git push
 ```
 
 Pin `sha` to a commit that exists — `claude plugin install` fails outright on a
-bad one. Bump it when you want a new version of the plugin out.
+bad one. Bump it when you want a new version out.
 
 ## Notes
 
-- Adding a skill needs no config: drop a directory with a `SKILL.md` under
-  `skills/` and add a row to the table above. The workspace globs the
-  directory.
-- `long-horizon-skills` ships three runnable scripts
-  (`claims_lint.py`, `state_patch.py`, `probe_liveness.sh`). The Python ones
-  are stdlib-only and self-test with `--self-test`; the shell one needs bash.
+- `long-horizon-skills` ships seven runnable scripts (stdlib-only Python + one
+  bash). Every script self-tests (`--self-test`); run them before merge.
+- `long-horizon-skills` v2 (2026-10-10) merged the former standalone
+  `ascend-operator-tackling` repo (now archived). Ascend/CANN specifics live on
+  as `references/profiles/ascend-cann.md`.
