@@ -15,6 +15,8 @@ disable-model-invocation: true
 
 ## 决策树
 
+0. 准备宣布"完成了 / 修好了 / 变快了"？
+   → 先走 **verify-first**（5 步验证闭环），再说结论。
 1. 目标是**硬性数值指标**（通过率、时延），要干多天/多周？
    → **long-horizon-skills**
 2. 任务很长，但**任务书/验收标准隔几天就可能变**，细节不能过早固化？
@@ -37,6 +39,7 @@ disable-model-invocation: true
 | adaptive-mission | model-invoked | 任务一长、需求可能漂移就该自动上马，等用户想起来就晚了 |
 | long-horizon-skills | model-invoked | 触发条件是客观的（硬指标/≥5 实验/接手旧树），命中即加载 |
 | personal-os | model-invoked | 会话启动协议，任何 AI 开工前都该先读它 |
+| verify-first | model-invoked | 验证是纪律不是编排：准备宣布结论时自动上马，不等人想起来 |
 
 ## 反模式
 
