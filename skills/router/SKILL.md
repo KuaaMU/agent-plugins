@@ -1,52 +1,56 @@
 ---
 name: router
 description: >-
-  User-invoked skill 路由器：不知道该用哪个 skill 时显式调用我，我帮你选。
-  覆盖 long-horizon-skills（硬性数值目标的多周攻坚）、adaptive-mission
-  （需求易漂移的长期任务）、work-output（任务收尾沉淀产出）、personal-os
-  （跨 AI 个人知识库）。没有合适的我会直说，不硬塞。
+  User-invoked skill router: when you don't know which skill fits the task, invoke me
+  and I'll route you. Covers long-horizon-skills (hard numeric targets), adaptive-mission
+  (drift-prone long missions), work-output (distilling outputs at wrap-up), personal-os
+  (cross-AI memory vault), verify-first (verification before claiming), mentor
+  (cognitive-alignment companion). If none fits, I'll say so instead of forcing one.
 disable-model-invocation: true
 ---
 
 # Router
 
-不知道用哪个 skill 时，显式调用我。不要为了用 skill 而用 skill——
-没有合适的就直接干，这是被允许的答案。
+When you don't know which skill fits, invoke me explicitly. Don't use a skill for the
+sake of using one — "none fits" is an allowed answer.
 
-## 决策树
+## Decision tree
 
-0. 准备宣布"完成了 / 修好了 / 变快了"？
-   → 先走 **verify-first**（5 步验证闭环），再说结论。
-1. 目标是**硬性数值指标**（通过率、时延），要干多天/多周？
+0. About to claim "done / fixed / faster"?
+   → Run **verify-first** (5-step verification loop) before announcing.
+1. Hard **numeric target** (pass rate, latency) over days/weeks?
    → **long-horizon-skills**
-2. 任务很长，但**任务书/验收标准隔几天就可能变**，细节不能过早固化？
+2. Long task, but the **spec/acceptance criteria may change every few days**,
+   details can't be frozen early?
    → **adaptive-mission**
-3. 任务快收尾了，想把过程沉淀成简报、经验、案例或公开产出？
+3. Task is wrapping up and you want to distill it into briefings, lessons, cases,
+   or publishable outputs?
    → **work-output**
-4. 想给自己建一个任何 AI 都能接手的长期记忆/知识库？
+4. Want to build a long-term memory/knowledge vault any AI can take over?
    → **personal-os**
-5. 1 和 2 都像（硬指标 + 需求漂移）？
-   → 先 **adaptive-mission** 定方向、管漂移，进入攻坚阶段切 **long-horizon-skills**。
-6. 都不像？
-   → 不用 skill，直接干。
-7. 想在主线交付的同时真正搞懂它、让 AI 带你成长？
-   → **mentor**（伴读：跨会话读主线，专让你懂，不干扰主线）。
+5. Both 1 and 2 (hard target + drifting spec)?
+   → Start with **adaptive-mission** to set direction and manage drift;
+   switch to **long-horizon-skills** for the assault phase.
+6. None of the above?
+   → Use no skill. Just do the work.
+7. Want to truly understand the project while shipping, let AI mentor you?
+   → **mentor** (study companion: cross-session reads the main line, never interferes).
 
-## 全仓触发策略（一览）
+## Repo-wide trigger policy
 
-| Skill | 触发方式 | 为什么 |
+| Skill | Trigger | Why |
 |---|---|---|
-| router | user-invoked | 选型是编排决策，归用户；模型自选容易选错还烧上下文 |
-| work-output | user-invoked | 沉淀和发布是用户决策（发什么、何时收尾），模型不该自作主张 |
-| adaptive-mission | model-invoked | 任务一长、需求可能漂移就该自动上马，等用户想起来就晚了 |
-| long-horizon-skills | model-invoked | 触发条件是客观的（硬指标/≥5 实验/接手旧树），命中即加载 |
-| personal-os | model-invoked | 会话启动协议，任何 AI 开工前都该先读它 |
-| verify-first | model-invoked | 验证是纪律不是编排：准备宣布结论时自动上马，不等人想起来 |
-| mentor | user-invoked | 学什么是你的主动决定；伴读跨会话读主线，只在你需要"懂"时出现 |
+| router | user-invoked | Routing is an orchestration decision — the user's call; model self-routing picks wrong and burns context |
+| work-output | user-invoked | Distilling and publishing are user decisions (what to publish, when to wrap up); the model shouldn't decide alone |
+| mentor | user-invoked | What to learn is your active decision; the companion only appears when you need to "understand" |
+| adaptive-mission | model-invoked | Long tasks with likely drift should auto-engage; waiting for the user to remember is too late |
+| long-horizon-skills | model-invoked | Triggers are objective (hard target / ≥5 experiments / inherited tree); load on hit |
+| personal-os | model-invoked | Session-start protocol — every AI should read it before starting work |
+| verify-first | model-invoked | Verification is discipline, not orchestration: engages when you're about to claim something, without waiting to be asked |
 
-## 反模式
+## Anti-patterns
 
-- **为了用 skill 而用 skill**：router 的合法输出包括"都不用"。
-- **同时加载两个流程 skill**：adaptive-mission 和 long-horizon-skills 不同时上马，
-  按上面的第 5 条分阶段用。
-- **把 router 当常驻**：我只在你犹豫"用哪个"时出现一次，选定就退场。
+- **Using a skill for the sake of it**: "none" is a valid router output.
+- **Loading two process skills at once**: adaptive-mission and long-horizon-skills never run together —
+  phase them per item 5 above.
+- **Keeping the router resident**: I appear once when you're unsure "which one," then step back after routing.

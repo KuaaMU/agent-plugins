@@ -1,79 +1,106 @@
 ---
 name: adaptive-mission
 description: >-
-  以最小计划驱动长期、需求易漂移的工程与研究任务（竞赛算子开发、硬件联调、AI 平台集成、跨周交付等）：先澄清方向，用 3-5 个检查点和出口证据推进，每轮回到澄清重新核对任务书/验收标准是否已变；用 STATE/TRUTH/PLAN/REVIEW 轻量记录管理状态、事实来源、可弃计划和验收证据；按需启用 Driver/Specialist/Reviewer/Guard 子 agent；真实环境验证后才算完成。适合任务书隔几天就可能修改、细节不能过早固化、需要持续攻坚与可追溯证据的场景。
-  Model-invoked：任务预计跨多天/多轮推进、或任务书/验收标准可能变化时自动加载。
+  Minimal-plan, drift-tolerant workflow for long engineering and research missions
+  (competition operator dev, hardware bring-up, AI platform integration, multi-week
+  delivery): clarify direction first, advance through 3–5 checkpoints with exit evidence,
+  re-check the spec/acceptance criteria against the latest version every round; manage
+  state, fact sources, disposable plans, and acceptance evidence with lightweight
+  STATE/TRUTH/PLAN/REVIEW records; enable Driver/Specialist/Reviewer/Guard subagents
+  on demand; only the real environment counts as done. For specs that may change every
+  few days, where details can't be frozen early. Model-invoked: auto-loads when a task
+  is expected to span days/rounds or its spec/acceptance criteria may change.
 ---
 
 # Adaptive Mission
 
-## 核心原则
+## Core principles
 
-- 计划是工具，不是契约：只保留方向、3-5 个检查点、每个检查点的出口证据。细节只在需求稳定处固化。
-- 事实来源是活的：每个检查点重新核对任务书、验收标准、接口与环境事实，更新 TRUTH.md，不沿用旧计划里的过期假设。
-- 状态持久，计划可弃：STATE.md、TRUTH.md、REVIEW.md 持续维护；PLAN.md 可随时推翻重写。
-- 做与评分离：完成一轮后由独立 Reviewer 验收。任何“我认为完成了”都不是证据。
-- 真实环境才算完成：仿真、干跑、单元测试是过程证据，不是验收证据。
-- 止损：同一问题连续 3 个思路失败，停止原地攻坚，换路径或问用户，并写入 BLOCKED 记录。
+- Plans are tools, not contracts: keep only the direction, 3–5 checkpoints, and each
+  checkpoint's exit evidence. Details solidify only where requirements are stable.
+- Fact sources are living: re-check the spec, acceptance criteria, interfaces, and
+  environment facts at every checkpoint; update TRUTH.md; never carry stale assumptions
+  from an old plan.
+- State persists, plans are disposable: maintain STATE.md, TRUTH.md, REVIEW.md;
+  PLAN.md may be thrown away and rewritten at any time.
+- Doing and judging are separate: an independent Reviewer signs off after each round.
+  Any "I think it's done" is not evidence.
+- Only the real environment counts as done: simulations, dry runs, and unit tests are
+  process evidence, not acceptance evidence.
+- Stop-loss: 3 consecutive failed approaches on the same problem → stop grinding in place,
+  switch paths or ask the user, and write a BLOCKED record.
 
-## 启动澄清（10 分钟以内）
+## Kickoff clarification (under 10 minutes)
 
-1. 读取任务书、用户给出的链接、现有代码与资源。
-2. 提取四件事：目标、验收标准、约束、交付物。给每个关键事实记下来源和版本时间。
-3. 写出 PLAN.md：方向 1-2 句 + 3-5 个检查点 + 每个检查点的完成证据。
-4. 初始化 STATE.md、TRUTH.md、REVIEW.md。
-5. 不产出详细任务清单。细节在推进中自然长出。
+1. Read the spec, user-provided links, existing code and resources.
+2. Extract four things: goal, acceptance criteria, constraints, deliverables. Record the
+   source and version time for each key fact.
+3. Write PLAN.md: 1–2 sentences of direction + 3–5 checkpoints + each checkpoint's evidence.
+4. Initialize STATE.md, TRUTH.md, REVIEW.md.
+5. No detailed task list. Details grow naturally as you go.
 
-## 工作节奏：澄清 → 构建 → 交付
+## Cadence: clarify → build → deliver
 
-每一轮都是同一个三循环，不做固定阶段：
+Every round is the same three-loop, no fixed phases:
 
-1. 澄清：重新读最新任务书/验收标准，与上一轮 diff；更新 TRUTH.md；若方向或验收已变，先更新 PLAN.md，再继续。
-2. 构建：只做当前检查点。把产出、日志、数据写进工作区；进展记入 STATE.md。不为了“维持计划完整”修补旧计划。
-3. 交付：产出当前交付物；按 references/review-rubric.md 让 Reviewer 独立验收；把结论与证据写进 REVIEW.md。通过则进入下一检查点，不通过则回到构建做最短修复。
+1. Clarify: re-read the latest spec/acceptance criteria, diff against last round; update
+   TRUTH.md; if direction or acceptance changed, update PLAN.md first, then continue.
+2. Build: work only the current checkpoint. Write outputs, logs, and data into the workspace;
+   record progress in STATE.md. Don't patch the old plan just to "keep it complete."
+3. Deliver: produce the current deliverable; have the Reviewer independently accept it per
+   references/review-rubric.md; write conclusions and evidence into REVIEW.md. Pass → next
+   checkpoint; fail → back to build for the shortest fix.
 
-每轮结束都回到澄清：任务书可能隔两三天就改，默认它已经变了，直到核对后确认没变。
+End every round back at clarify: assume the spec changed every two or three days until
+you've checked and confirmed it didn't.
 
-## 最小资产
+## Minimal assets
 
-- STATE.md：当前检查点、完成/进行中/阻塞、最近一次检查点、BLOCKED 记录（问题、尝试过的思路、失败原因、新路径）。
-- TRUTH.md：事实、来源链接或文档路径、版本或日期、最后核对时间。发现矛盾先记录，再决定行动。
-- PLAN.md：方向 + 检查点 + 证据。可以随时删除重写。
-- REVIEW.md：每轮 Reviewer 的结论、证据清单、未解决风险。
+- STATE.md: current checkpoint, done/in-progress/blocked, last checkpoint, BLOCKED records
+  (problem, approaches tried, why they failed, new path).
+- TRUTH.md: facts, source links or doc paths, versions or dates, last check time.
+  Record contradictions first, then decide what to do.
+- PLAN.md: direction + checkpoints + evidence. Deletable and rewritable anytime.
+- REVIEW.md: each round's Reviewer verdict, evidence list, unresolved risks.
 
-## 需求漂移响应
+## Responding to requirement drift
 
-- 验收标准变了：不硬完成旧计划。先更新 TRUTH.md 和 PLAN.md，向用户确认新方向，再继续。
-- 验收标准互相矛盾：把矛盾写入 STATE.md/TRUTH.md，按证据最强的一版继续，同时请求确认。
-- 事实来源过期：重新核对并记录时间。不用过期事实做关键决策。
-- 平台、工具、依赖更新：先做最小冒烟验证再迁移，记录到 TRUTH.md。
+- Acceptance criteria changed: don't force-complete the old plan. Update TRUTH.md and
+  PLAN.md first, confirm the new direction with the user, then continue.
+- Acceptance criteria contradict each other: write the contradiction into STATE.md/TRUTH.md,
+  continue with the best-evidenced version, and request confirmation.
+- Fact source expired: re-check and record the time. Don't make key decisions on expired facts.
+- Platform/tool/dependency updates: run a minimal smoke test before migrating; record in TRUTH.md.
 
-## 子 agent 按需启用
+## Subagents on demand
 
-只在该轮真正需要时才启用，不为“看起来专业”而堆角色：
+Enable only when the round genuinely needs them — not to "look professional":
 
-- Driver：主线执行，负责当前检查点。
-- Specialist：难点讨论、领域调研、方案设计，输出可选方案与取舍。
-- Reviewer：独立验收，只给证据与出口标准，不看实现者结论。
-- Guard：检查安全边界、不可逆操作、真实环境动作前的前置条件。
+- Driver: main-line execution, owns the current checkpoint.
+- Specialist: hard-problem discussion, domain research, option design; outputs options and trade-offs.
+- Reviewer: independent acceptance; works from evidence and exit criteria only, never from the implementer's conclusions.
+- Guard: checks safety boundaries, irreversible operations, and preconditions before real-environment actions.
 
-用法、提示词模板与隔离规则见 references/roles-subagents.md。
+Usage, prompt templates, and isolation rules: references/roles-subagents.md.
 
-## 验收与证据
+## Acceptance & evidence
 
-- 用 references/review-rubric.md 的 P0/P1/P2 分级验收。
-- 出口证据优先：真实环境运行日志、结果数据、回归对比、截图/录像、可复现命令。
-- 干跑/仿真/单元测试是过程证据，可帮助定位问题，但不能替代真实环境验收。
-- Reviewer 不通过时，记录具体缺口，回到构建修最短路径。
+- Accept with the P0/P1/P2 tiers from references/review-rubric.md.
+- Exit evidence first: real-environment run logs, result data, regression comparisons,
+  screenshots/recordings, reproducible commands.
+- Dry runs/simulations/unit tests are process evidence — useful for debugging, never a
+  substitute for real-environment acceptance.
+- When the Reviewer rejects: record the specific gap, go back to build, take the shortest path.
 
-## 参考文件
+## Reference files
 
-- references/checkpoints.md：检查点设计、出口证据、漂移响应。
-- references/roles-subagents.md：Driver/Specialist/Reviewer/Guard 分工与提示词模板。
-- references/review-rubric.md：P0/P1/P2 验收清单与可定制模板。
-- references/reference-ingestion.md：把链接/文档蒸馏成带版本的 TRUTH 事实。
-- references/dual-tool-split.md：Claude Code 与 Codex 双工具分工、遥测与止损。
+- references/checkpoints.md: checkpoint design, exit evidence, drift response.
+- references/roles-subagents.md: Driver/Specialist/Reviewer/Guard roles and prompt templates.
+- references/review-rubric.md: P0/P1/P2 acceptance checklist and customizable template.
+- references/reference-ingestion.md: distilling links/docs into versioned TRUTH facts.
+- references/dual-tool-split.md: Claude Code + Codex dual-tool split, telemetry, stop-loss.
 
-## 边界
+## Boundaries
 
-本总纲不绑定具体领域。CANN 算子、嵌入式联调等具体任务由专用环境 skill（如 ascend-950pr-operator-dev）补充硬件、SDK、构建与测试命令；本 skill 只负责流程、证据与漂移管理。
+This playbook is domain-agnostic. Hardware specifics (CANN operators, embedded bring-up, etc.)
+come from a dedicated environment skill; this skill owns only process, evidence, and drift management.

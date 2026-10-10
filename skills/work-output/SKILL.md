@@ -1,111 +1,139 @@
 ---
 name: work-output
 description: >-
-  把任务过程沉淀成四轨工作产出：任务轨交付物与证据、过程轨可复现命令与失败记录、复用轨 skill/模板/经验、公开轨案例草稿/文章/开源仓库/训练语料。用于任何工程、研究或创作任务收尾时生成分层简报（一句话/五行/证据附录）、维护 OUTPUTS.md 与 LEARN.md、按发布闸门脱敏并许可后开源沉淀；公开轨可产出面向传播的案例草稿，把任务轨迹批量积累成结构化 episode 积压库，并定期主动维护与提出发布提案（最终发布仍需用户批准）。当用户希望工作产出反补自己、帮助理解任务、对外展示价值或作为训练语料时使用。
-  User-invoked：任务收尾、需要沉淀产出时由用户显式调用。
+  Distill a task's process into four-track work outputs: task-track deliverables and
+  evidence, process-track reproducible commands and failure records, reuse-track
+  skills/templates/lessons, public-track case drafts/articles/open-source repos/training
+  corpora. Use at the wrap-up of any engineering, research, or creative task to generate
+  layered briefs (one-liner / five lines / evidence appendix), maintain OUTPUTS.md and
+  LEARN.md, and publish distillations through a de-identification + licensing gate;
+  the public track can produce case drafts, accumulate trajectories into a structured
+  episode backlog, and proactively propose publications on schedule (final publishing
+  still needs user approval). User-invoked: explicitly invoked by the user at task
+  wrap-up when outputs need distilling.
 disable-model-invocation: true
 ---
 
 # Work Output
 
-## 核心立场
+## Core stance
 
-- 产出是副产物，不是额外劳动：优先蒸馏本来就会产生的东西（命令、日志、diff、决策、失败），不为“看起来有产出”制造文件。
-- 产出跟着问题走：每条产出回答一个问题，并带 as-of 时间、当时假设、证据。世界会变，产出记录的是“当时为什么这么做”。
-- 四轨分层：任务轨（交付）、过程轨（可复现）、复用轨（自反馈）、公开轨（世界价值）。先保证前两轨，再谈后两轨。
-- 分层可读：一句话结论 → 五行摘要 → 证据附录。用户负责项目只看五行，深挖再看附录。
-- 发布有闸门：公开前过脱敏、许可、可复现、无夸大四项检查。
+- Outputs are byproducts, not extra labor: distill what you'd produce anyway (commands,
+  logs, diffs, decisions, failures) — don't manufacture files to "look productive."
+- Outputs follow the problem: each output answers a question, with an as-of time, the
+  assumptions at the time, and evidence. The world changes; outputs record "why we did
+  it this way back then."
+- Four tracks, layered: task track (delivery), process track (reproducible), reuse track
+  (self-feedback), public track (world value). Secure the first two before talking about
+  the last two.
+- Layered readability: one-liner → five-line summary → evidence appendix. A user who only
+  owns the project reads the five lines; dig into the appendix for depth.
+- Publishing has a gate: de-identification, licensing, reproducibility, and no-hype checks
+  before anything goes public.
 
-## 启动
+## Kickoff
 
-1. 创建 OUTPUTS.md：四轨分区 + 发布待办 + 下一轮问题。
-2. 有可复用经验时创建 LEARN.md；没有就先空着。
-3. 把任务目标、验收标准和关键链接写进 OUTPUTS.md 头部（引用 TRUTH.md 而非复制）。
+1. Create OUTPUTS.md: four-track sections + publication TODO + next-round questions.
+2. Create LEARN.md when there's reusable experience; leave it empty until then.
+3. Write the task goal, acceptance criteria, and key links at the top of OUTPUTS.md
+  (reference TRUTH.md, don't copy it).
 
-## 每个检查点/每轮收尾（5 分钟蒸馏）
+## End of each checkpoint/round (5-minute distillation)
 
-写三条：
+Write three things:
 
-- 新事实：更新 TRUTH.md（来源 + 版本 + 核对时间）。
-- 新经验：写进 LEARN.md，格式“下次遇到 X 先试 Y，因为证据是 Z”。
-- 公开候选：写进 OUTPUTS.md 公开轨，标状态：草稿/可发布/不发。
+- New facts: update TRUTH.md (source + version + check time).
+- New lessons: write into LEARN.md as "next time I meet X, try Y first, because the evidence is Z."
+- Public candidates: write into OUTPUTS.md's public track, marked: draft / publishable / won't-publish.
 
-不要等任务结束才写；证据和教训过期最快。
+Don't wait until the task ends; evidence and lessons expire fastest.
 
-## 分层简报
+## Layered briefs
 
-每次交付或用户要求了解进度时，输出三层：
+At every delivery, or whenever the user asks for progress, output three layers:
 
-1. 一句话结论。
-2. 五行摘要：问题、决策、证据、风险、下一步。
-3. 证据附录：可复现命令、输出、文件路径、失败记录。
+1. One-liner conclusion.
+2. Five-line summary: problem, decision, evidence, risks, next steps.
+3. Evidence appendix: reproducible commands, outputs, file paths, failure records.
 
-模板见 references/layered-brief.md。
+Template: references/layered-brief.md.
 
-## 四轨产出
+## The four tracks
 
-- 任务轨：交付物 + 出口证据，属于用户验收。
-- 过程轨：可复现命令、环境、失败与 BLOCKED、回滚路径，反补自己。
-- 复用轨：LEARN 条目、skill、模板、提示词、checklist，攒够就固化。
-- 公开轨：案例草稿、文章、开源仓库、结构化 episode 积压；必须过发布闸门。
+- Task track: deliverables + exit evidence — what the user accepts.
+- Process track: reproducible commands, environments, failures and BLOCKEDs, rollback paths — feeds back into yourself.
+- Reuse track: LEARN entries, skills, templates, prompts, checklists — solidify once enough accumulates.
+- Public track: case drafts, articles, open-source repos, structured episode backlogs — must pass the publication gate.
 
-细节与清单见 references/four-tracks.md。
+Details and checklists: references/four-tracks.md.
 
-## 案例草稿（公开轨）
+## Case drafts (public track)
 
-当 OUTPUTS.md 公开轨出现“可发布”候选，且用户表达对外展示意图时，产出案例草稿：
+When OUTPUTS.md's public track has a "publishable" candidate and the user signals intent
+to show work externally, produce a case draft:
 
-- 目标：把一次任务变成可传播的故事，而不是结构化清单。
-- 内容：标题、摘要、背景问题、方案与取舍、证据与结果、教训、链接、脱敏声明。
-- 规则：每项目最多一篇主案例；草稿不算已发布，发布仍需过发布闸门；默认不自动写。
+- Goal: turn one task into a tellable story, not a structured list.
+- Contents: title, abstract, background problem, approach and trade-offs, evidence and results,
+  lessons, links, de-identification statement.
+- Rules: at most one flagship case per project; a draft is not published — publishing still
+  requires the publication gate; never auto-write by default.
 
-模板见 references/case-study.md。
+Template: references/case-study.md.
 
-## 结构化 episode（训练语料候选）
+## Structured episodes (training-corpus candidates)
 
-任务收尾时，把轨迹整理成 episode：goal → context（TRUTH 事实）→ actions（命令/决策轨迹）→ evidence → reflection（结果标签 + 教训）。
+At task wrap-up, organize the trajectory into an episode:
+goal → context (TRUTH facts) → actions (command/decision trail) → evidence →
+reflection (result labels + lessons).
 
-只整理高质量、已脱敏、有许可证的 episode；原始聊天记录不直接作为语料。
+Only organize high-quality, de-identified, licensed episodes; raw chat logs never become corpora directly.
 
-每份 episode 都登记进 EPISODES.md 积压索引，默认 training_usage=not-allowed；积累到一定数量或定期整理成带许可证的数据集仓库，发布前逐份确认授权与脱敏。
+Register every episode in the EPISODES.md backlog index, default training_usage=not-allowed;
+once enough accumulates (or on schedule), bundle into a licensed dataset repo — confirm
+authorization and de-identification per episode before publishing.
 
-格式与示例见 references/episode-format.md；积累规则见 references/episode-backlog.md。
+Format and examples: references/episode-format.md; accumulation rules: references/episode-backlog.md.
 
-## 主动维护与发布提案
+## Proactive maintenance & publication proposals
 
-不只在任务收尾时整理产出，还要在以下节点主动维护：
+Don't only distill at wrap-up — actively maintain at these points:
 
-- 每个检查点：更新 OUTPUTS.md / EPISODES.md 的状态。
-- 任务里程碑：验收通过、开源完成、数据集积累满 N 份。
-- 定期：每周或每月审查公开轨与积压库，把成熟候选升级为发布提案。
+- Each checkpoint: update OUTPUTS.md / EPISODES.md statuses.
+- Task milestones: acceptance passed, open-sourced, dataset reached N episodes.
+- On schedule: weekly or monthly, review the public track and backlog, promote mature
+  candidates into publication proposals.
 
-发布提案必须包含：产出链接、发布理由（传播价值/时效/完整度）、建议时机（趁热发布/凑批发布/延后）、风险（隐私/夸大/维护负担）。提案等用户批准后才执行，agent 不自行发布。
+A publication proposal must include: output link, why publish (reach value / timeliness /
+completeness), suggested timing (strike while hot / batch / defer), risks
+(privacy / hype / maintenance burden). Proposals execute only after user approval;
+the agent never publishes on its own.
 
-规则与模板见 references/active-maintenance.md。
+Rules and templates: references/active-maintenance.md.
 
-## 发布闸门
+## Publication gate
 
-公开任何产出前逐项确认：
+Confirm each item before publishing anything:
 
-- 脱敏：无密钥、Token、IP、串口、路径泄露、个人信息。
-- 许可：明确 MIT/CC-BY 等，声明是否允许训练。
-- 可复现：命令与数据可重复，结果不夸大。
-- 价值：一篇案例胜于十篇流水账；每项目最多一篇主案例 + 一个可复用资产。
-- 用户批准：提案必须经用户显式同意后才发布；agent 不自行发布。
+- De-identified: no keys, tokens, IPs, serial ports, path leaks, personal info.
+- Licensed: explicit MIT/CC-BY etc.; state whether training use is allowed.
+- Reproducible: commands and data repeat, results not exaggerated.
+- Valuable: one good case beats ten logs; at most one flagship case + one reusable asset per project.
+- User approval: proposals execute only after explicit user consent; the agent never publishes alone.
 
-检查表见 references/publication-gate.md。
+Checklist: references/publication-gate.md.
 
-## 参考文件
+## Reference files
 
-- references/four-tracks.md：四轨模型与各轨清单。
-- references/layered-brief.md：三层简报模板与示例。
-- references/distillation-rules.md：检查点蒸馏规则与 LEARN 写法。
-- references/episode-format.md：结构化 episode schema 与示例。
-- references/episode-backlog.md：episode 批量积累与数据集发布。
-- references/case-study.md：案例草稿模板与触发条件。
-- references/active-maintenance.md：主动维护与发布提案规则。
-- references/publication-gate.md：发布前检查表与许可说明。
+- references/four-tracks.md: the four-track model and per-track checklists.
+- references/layered-brief.md: layered brief template and examples.
+- references/distillation-rules.md: checkpoint distillation rules and LEARN writing.
+- references/episode-format.md: structured episode schema and examples.
+- references/episode-backlog.md: episode accumulation and dataset publishing.
+- references/active-maintenance.md: proactive maintenance and publication proposals.
+- references/publication-gate.md: pre-publication checklist and licensing.
 
-## 与 adaptive-mission 的关系
+## Relationship with adaptive-mission
 
-本 skill 不依赖具体任务流程。配合 adaptive-mission 使用时，STATE/TRUTH/PLAN/REVIEW 提供事实与证据，本 skill 负责把它们沉淀成四轨产出；独立使用时在任意任务收尾调用本 skill 即可。
+This skill doesn't depend on any particular task process. Used with adaptive-mission,
+STATE/TRUTH/PLAN/REVIEW supply facts and evidence while this skill distills them into
+four-track outputs; used alone, invoke this skill at any task's wrap-up.

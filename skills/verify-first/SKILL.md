@@ -1,48 +1,50 @@
 ---
 name: verify-first
 description: >-
-  Model-invoked 验证纪律微 skill：在宣布任何结论（做完了、修好了、变快了）
-  之前强制走 5 步验证闭环：先定义什么算证据、跑真实环境、读原始输出、
-  做判别力检查、主动找反例。附借口预驳表。Model-invoked：准备宣布完成、
-  修复、优化类结论时自动加载。
+  Model-invoked verification-discipline micro-skill: before announcing any conclusion
+  (done, fixed, faster), run a forced 5-step loop — define what counts as evidence, run
+  the real environment, read raw output, check discriminability, actively seek
+  counterexamples. Includes a rationalization pre-buttal table. Model-invoked: loads
+  when you're about to claim completion, a fix, or an improvement.
 ---
 
 # Verify First
 
-核心只有一句话：**不认断言，只认证据。**
+One sentence: **no assertions, only evidence.**
 
-## 触发
+## Trigger
 
-当你准备宣布以下任何一种结论时，先走完 5 步闭环再说：
-做完了 / bug 修好了 / 性能提升了 / 方案有效。
+Before announcing any of these, run the 5-step loop first:
+done / bug fixed / performance improved / approach works.
 
-## 验证闭环（5 步，2 分钟）
+## The loop (5 steps, 2 minutes)
 
-1. **定义证据**：先写下"什么算证明它 work"，再跑。事后找证据叫自证。
-2. **跑真实环境**：仿真、干跑、单元测试是过程证据，不是验收证据。
-   验收必须在真实环境跑。
-3. **读原始输出**：看日志/数据/截图本身，不看自己的总结。
-   总结会撒谎，原始输出不会。
-4. **判别力检查**：问自己——如果它其实没跑/失败了，我看到的输出会不一样吗？
-   一样 → 这次验证判别力为零，重做。
-5. **主动找反例**：先想"什么证据能推翻我的结论"，去找它。找不到才算过。
+1. **Define evidence**: write down "what would prove it works" BEFORE running.
+   Finding evidence after the fact is self-justification.
+2. **Run the real environment**: simulations, dry runs, and unit tests are process evidence,
+   not acceptance evidence. Acceptance must run in the real environment.
+3. **Read raw output**: read the logs/data/screenshots themselves, not your summary.
+   Summaries lie; raw output doesn't.
+4. **Discriminability check**: ask yourself — if it actually hadn't run / had failed,
+   would what I see look any different? If no → this verification has zero discriminability. Redo it.
+5. **Actively seek counterexamples**: first think "what evidence would overturn my conclusion,"
+   then go find it. Only if you can't, it passes.
 
-## 借口预驳表
+## Rationalization pre-buttal table
 
-| 借口 | 预驳 |
+| Excuse | Pre-buttal |
 |---|---|
-| "测试都过了" | 单元测试只证过程不证验收。真实环境跑了吗？ |
-| "日志看起来是对的" | 看起来对 ≠ 判别力检查。失败时日志长什么样，对比过吗？ |
-| "之前就是这么做的" | 那是历史证据，不是这次的证据。 |
-| "没时间验证了" | 没验证的结论就是断言。标"未验证"，别当结论用。 |
+| "All tests pass" | Unit tests prove process, not acceptance. Did it run in the real environment? |
+| "The logs look right" | Looks right ≠ discriminability check. What do the logs look like on failure — compared? |
+| "That's how it was done before" | That's historical evidence, not this run's evidence. |
+| "No time to verify" | An unverified conclusion is an assertion. Mark it "unverified," don't present it as a conclusion. |
 
-## 与 long-horizon-skills 的关系
+## Relationship with long-horizon-skills
 
-重型验证（装置门、探针生效性、证据台账、独立审计）在
-long-horizon-skills 里。我是轻量版：任何任务、任何规模，
-5 步闭环 2 分钟走完。
+Heavy verification (apparatus gate, probe liveness, evidence ledger, independent auditor) lives in
+long-horizon-skills. I'm the lightweight version: any task, any scale, 5 steps in 2 minutes.
 
-## 反模式
+## Anti-patterns
 
-- 验证走完但结论早就写好了 → 那是表演，不是验证。
-- 把"未验证"标成"已完成" → 这是本仓最严重的违规。
+- The loop ran but the conclusion was written beforehand → that's theater, not verification.
+- Marking "unverified" as "done" → the most serious violation in this repo.

@@ -1,200 +1,268 @@
 ---
 name: long-horizon-skills
 description: >-
-  长程硬指标攻坚（通过率/时延等多周目标）的防失效+执行系统：六类失效分类
-  （框架锁死/自证偏差/目标漂移/装置失效/门语义失效/证据强度失配）、任务锚定、
-  证据台账（CLAIMS.jsonl+linter）、装置门（探针生效性检查）、失败集合归并与
-  停滞触发、耗尽触发器、上游对标侦察、独立审计者、JSON 状态机（state.json+
-  稀疏补丁）与 Markdown 台账双轨、赛马纪律、文件财政纪律、困难集、profile
-  机制。触发：硬性数值目标需多天/多周、≥5 个改生产代码的实验、接手他人未
-  完成的树、存在外部同类实现。Model-invoked：命中任一触发条件时自动加载。
+  Anti-failure + execution system for hard numeric targets (pass rate/latency) over
+  multiple weeks: six failure classes (framework lock-in / self-confirmation bias /
+  goal drift / dead apparatus / gate-semantics drift / evidence-strength mismatch),
+  task anchoring, evidence ledger (CLAIMS.jsonl + linter), apparatus gate (probe
+  liveness checks), failure-set merging with stall triggers, exhaustion triggers,
+  upstream recon, independent auditor, JSON state machine (state.json + sparse patches)
+  with dual-track Markdown ledgers, racing discipline, file-hygiene discipline,
+  hard-set, and profile mechanism. Triggers: hard numeric target spanning days/weeks,
+  ≥5 experiments each touching production code, taking over someone else's unfinished
+  tree, existence of external reference implementations. Model-invoked: auto-loads when
+  any trigger condition hits.
 ---
 
-# 长程攻坚：防失效规程 + 执行循环
+# Long-Horizon Assault: Anti-Failure Protocol + Execution Loop
 
-> 本 skill 解决"有硬性数值目标、需要多天/多周迭代的工程攻坚"。
-> 防的不是"不够努力"，而是**六类"一直在正常推进"的失效**：
-> 框架锁死 / 自证偏差 / 目标漂移 / 装置失效 / 门语义失效 / 证据强度失配。
-> 其中"装置失效"最隐蔽：一次**没跑过**的实验产出格式完整、数字整齐的记录，
-> 而所有常规纪律全部通过。
+> This skill solves "engineering assaults with a hard numeric target, iterating over days/weeks."
+> What it prevents isn't "lack of effort" but **six classes of "looks-like-normal-progress" failure**:
+> framework lock-in / self-confirmation bias / goal drift / dead apparatus / gate-semantics drift /
+> evidence-strength mismatch.
+> "Dead apparatus" is the stealthiest: an experiment that **never actually ran** produces
+> well-formatted records with tidy numbers — while every conventional discipline passes.
 
-## 0. 何时加载 · 框架说明 · 怎么用
+## 0. When to load · Framework notes · How to use
 
-### 0.1 何时加载（满足任意两条）
+### 0.1 When to load (any two)
 
-- 目标是一个**硬性数值指标**（如通过率 `N/N`、延迟 ≤ X），需要多天/多周；
-- 预计要做 **≥ 5 个实验**，且每个实验都要改生产代码；
-- 目标是在**他人已有代码**上继续（接手、继承、或自己上一轮留下的树）；
-- 存在**外部同类实现**（上游 PR、竞品提交、参考库）；
-- 失败成本高：返工、跑偏、遗忘都会浪费大量时间。
+- The goal is a **hard numeric target** (e.g. pass rate `N/N`, latency ≤ X), spanning days/weeks;
+- Expecting **≥ 5 experiments**, each touching production code;
+- Continuing on **someone else's existing code** (taking over, inheriting, or your own tree from a previous round);
+- **External reference implementations** exist (upstream PRs, competitor commits, reference libs);
+- Failure is expensive: rework, drift, and forgetting all waste large amounts of time.
 
-### 0.2 框架说明：两种分层为什么只取一种
+### 0.2 Framework notes: why two layerings but only one is used
 
-本 skill 的 L0/L1/L2/L3 按"**什么时候进上下文**"划分（照着 Claude Code /
-Codex 类 agent 的实际加载模型：常驻的只有 description，调用时载正文，
-references/ 与 scripts/ 按需读或跑）。另有一套 L0–L4 按"抽象层次"划分
-（第一性原理→决策框架→流程→清单→脚本）——**两者正交，不硬套**。
-本 skill 取前者为骨架：第一性原理不单独成层，而是放在 L1 开头作
-"决策地基"（§0.4）；抽象层次的细节（门禁清单、脚本）按"何时用"
-分别进 L2 / L3。
+This skill's L0/L1/L2/L3 are divided by "**when it enters context**" (following the actual
+loading model of Claude Code / Codex-class agents: only the description is resident, the body
+loads on invocation, references/ and scripts/ load or run on demand). There's an alternative
+L0–L4 divided by "abstraction level" (first principles → decision framework → process →
+checklist → scripts) — **the two are orthogonal, don't force-fit them**.
+This skill takes the former as its skeleton: first principles don't get their own layer but sit
+at the top of L1 as the "decision foundation" (§0.4); abstraction-level details (gate checklists,
+scripts) enter L2 / L3 by "when used."
 
-| 层 | 什么时候进上下文 | 放什么 | 载体 | 预算 |
+| Layer | When it enters context | Contains | Carrier | Budget |
 |---|---|---|---|---|
-| **L0 触发** | 常驻 | name + description：何时该用 | frontmatter | ≤ 300 字 |
-| **L1 操作** | 调用时 | **§0.4 决策地基** · §1–§15 **规则索引**（一行一条） · 每轮闭环清单 · 工具入口 | 本文件正文 | ≤ 250 行 |
-| **L2 详读** | 按需 | 每条规则的完整正文（含它对应的**真实代价**）· 失效目录 · 模板 · schema | `references/*.md` | 按需 |
-| **L3 执行** | 调用时 | 七个工具；各自自证会开火 | `scripts/` | 0（不进上下文） |
+| **L0 trigger** | Resident | name + description: when to use | frontmatter | ≤ 300 chars |
+| **L1 operations** | On invocation | **§0.4 decision foundation** · §1–§15 **rule index** (one line each) · per-round loop checklist · tool entries | this file's body | ≤ 250 lines |
+| **L2 deep read** | On demand | Full text of each rule (with its **real cost**) · failure catalog · templates · schemas | `references/*.md` | on demand |
+| **L3 execution** | On invocation | Seven tools; each proves it fires | `scripts/` | 0 (never enters context) |
 
-**三条关键约定**：
+**Three key conventions**:
 
-1. **L1 是"索引"，不是"规则本身"**——一行一条，如
-   `4.6 开跑前先写下"如果有效，失败集合会怎么变"`。
-   扫一遍就知道该去 L2 读哪条，**不必全读**。
-2. **规则编号（`§4.6` / `G3`）是跨文件主键**，引用只用编号，**不复述正文**。
-3. **权威正文在 L2**。L1 索引与 L2 冲突时以 L2 为准。
+1. **L1 is an "index," not "the rules themselves"** — one line each, e.g.
+   `4.6 Before a run, write down "if this works, how will the failure set change?"`
+   One scan tells you which L2 entry to read; **don't read everything**.
+2. **Rule numbers (`§4.6` / `G3`) are cross-file primary keys** — cite by number only,
+   **never restate the text**.
+3. **Authoritative text lives in L2**. When the L1 index conflicts with L2, L2 wins.
 
-### 0.3 怎么用（三条路径）
+### 0.3 How to use (three paths)
 
-| 你在哪 | 读什么 | 产出 |
+| Where you are | Read | Produce |
 |---|---|---|
-| 刚拿到任务书 | `references/asset-index.md` §4「从任务书到第一个实验」 | `TASK_ANCHOR.md` + `CLAIMS.jsonl` + `state.json` |
-| 每轮实验 | §11 闭环；按需读 L2 里被索引指到的条目 | 状态补丁 + 台账条目 |
-| 宣布完成前 | §9 完成判据 + §8 独立审计者 | 逐字重述判据 + 实测值比对 |
+| Just got the task brief | `references/asset-index.md` §4 "from brief to first experiment" | `TASK_ANCHOR.md` + `CLAIMS.jsonl` + `state.json` |
+| Each experiment round | §11 loop; read L2 entries the index points to, on demand | state patch + ledger entries |
+| Before declaring done | §9 completion criteria + §8 independent auditor | verbatim criteria restatement + measured-value comparison |
 
-### 0.4 决策地基（五条第一性原理）
+### 0.4 Decision foundation (five first principles)
 
-后面的所有规则都是这五条在具体场景的展开；冲突时回到这里。
+Every rule below is one of these five expanded for a concrete scenario; on conflict, come back here.
 
-- **G1 证据优先于记忆**：改变决策的结论必须能回到可复现的证据；状态属于文件，不属于上下文。
-- **G2 验收口径是唯一的锚**：先写清目标、验收口径、约束和可放弃项；口径一变，所有旧结论重验，不偷换口径。
-- **G3 归因先于修改**：先定位关键路径/失效机制，再做最小、单变量、可证伪的实验；不做"不知道为什么慢就先改改看"的实验。
-- **G4 泛化先于特例**：优先结构性、跨用例的方案；禁止按测试用例堆特例（白名单蔓延是局部最优陷阱）。
-- **G5 失败要有价格**：每个候选都有 kill 线；连续失败必须换路径，不许换参数硬撑。
+- **G1 Evidence over memory**: conclusions that change decisions must trace back to reproducible
+  evidence; state belongs to files, not to context.
+- **G2 Acceptance criteria are the only anchor**: write down the goal, acceptance criteria,
+  constraints, and droppables first; when criteria change, re-verify all old conclusions —
+  never swap criteria silently.
+- **G3 Attribution before modification**: locate the critical path / failure mechanism first, then run
+  minimal, single-variable, falsifiable experiments; never run "don't know why it's slow, let's just
+  change something" experiments.
+- **G4 Generalization before special cases**: prefer structural, cross-case solutions; forbid piling
+  special cases per test (allowlist creep is a local-optimum trap).
+- **G5 Failure must have a price**: every candidate has a kill line; consecutive failures must change
+  paths, never just retune parameters.
 
-## 1. 任务锚定 —— 规则索引（详见 `references/rules-ch1-anchor.md`）
+## 1. Task anchoring — rule index (see `references/rules-ch1-anchor.md`)
 
-- `1.1` 继承的框架是假设，不是给定条件；"这个形状为什么由它算？"答不上来就标待验证。
-- `1.2` 每 ≤5 个实验或每 24 小时强制重锚定：不看旧总结，从原始证据重建；写不出"证伪实验+证伪后走哪条路"⇒它是信仰不是假设。
-- `1.3` 先读被测对象本身（用例生成器/用例表原文）再建模。
-- `1.4` 每条未验证假设必须绑定已排期的证伪实验；排不出期就当场测掉或显式接受。
-- `1.5` 锚定档有机器形态：`state.json` 每轮只读它一个对象；稀疏补丁，`null` 删键。
-- `1.6` 判据、用例、验收脚本也是被测对象；★ 把参考实现当被测方跑一遍同一道门。
+- `1.1` An inherited framework is a hypothesis, not a given; if you can't answer "why does it
+  compute this shape?" mark it unverified.
+- `1.2` Force re-anchoring every ≤5 experiments or 24h: rebuild from raw evidence without reading
+  old summaries; if you can't write "falsifying experiment + where to go if falsified" ⇒ it's faith, not a hypothesis.
+- `1.3` Read the measured object itself (case-generator / case-table source text) before modeling.
+- `1.4` Every unverified assumption must bind to a scheduled falsifying experiment; if you can't
+  schedule it, test it on the spot or explicitly accept it.
+- `1.5` The anchor doc has a machine form: `state.json` is the one object read every round;
+  sparse patches, `null` deletes keys.
+- `1.6` Criteria, cases, and acceptance scripts are measured objects too; ★ run the reference
+  implementation through the same gate as the system under test.
 
-## 2. 证据台账 —— 规则索引（详见 `references/rules-ch2a-ledger.md` + `rules-ch2b-structures.md`）
+## 2. Evidence ledger — rule index (see `references/rules-ch2a-ledger.md` + `rules-ch2b-structures.md`)
 
-- `2.1` 数字进结论前带四要素：值/定义式/单位/出处；对比写清 A 相对 B。
-- `2.2` 对比数字必须带主语；禁止裸写"+40%"。
-- `2.3` 不得引用自己的旧总结作证据；回原始日志/CSV/源码重读。
-- `2.4` 量纲未核实的指标不算证据（定义式？单位？可能超过 1 吗？）。
-- `2.5` 派生文档继承证据等级不得升级；`CLAIMS.jsonl` 台账 + `claims_lint.py` 六条机械检查；条目永不删除只失效；derived_from 必填于无证据路径条目。
-- `2.6` 引用外部实现先核验可读时间窗；存在性断言写明核验的仓与路径；否定结论要两个独立通道。
-- `2.7` 起决定作用的外部 artifact 读到当场落盘（源文件+哈希+台账登记）。
+- `2.1` Numbers carry four elements before entering conclusions: value / defining formula / unit /
+  source; comparisons state A relative to B.
+- `2.2` Compared numbers must have subjects; bare "+40%" is forbidden.
+- `2.3` Never cite your own old summaries as evidence; re-read raw logs/CSVs/source.
+- `2.4` Metrics with unverified dimensions don't count as evidence (defining formula? units? can it exceed 1?).
+- `2.5` Derived docs inherit evidence level, never upgrade it; `CLAIMS.jsonl` ledger +
+  `claims_lint.py` six mechanical checks; entries are never deleted, only invalidated;
+  derived_from required on entries without an evidence path.
+- `2.6` Verify the readable time window before citing external implementations; existence claims
+  name the repo and path verified; negative conclusions need two independent channels.
+- `2.7` Decisive external artifacts get persisted on sight (source file + hash + ledger registration).
 
-## 3. 装置门 —— 规则索引（详见 `references/rules-ch3-apparatus.md`）
+## 3. Apparatus gate — rule index (see `references/rules-ch3-apparatus.md`)
 
-- `3.0` 判别力检验：最坏情况下（它没跑/不存在/失败了）检查输出会不会和成功时一模一样？会⇒判别力为零。
-- `3.1` 探针证明生效前不算证据（`probe_liveness.sh` 或廉价行为/内核名/差分用例四法，差分优先）。
-- `3.2` 两臂实测差异小于结构差异⇒先怀疑探针。
-- `3.3` 对照臂只证可复现，不证有效性。
-- `3.4` 绿灯证明"所走路径正确"，不证明"走的是哪条路径"；性能门不校验数值。
-- `3.5` "做更少工作"型探针必须预注册声明并先过精度门。
-- `3.6` 证不了生效⇒记 `INVALID` 不得记 `refuted`。
-- `3.7` 并发下"设备空闲"不是互斥判据，锁才是；短任务不排长任务后。
+- `3.0` Discriminability check: in the worst case (it didn't run / doesn't exist / failed), would the
+  output look exactly like success? If yes ⇒ zero discriminability.
+- `3.1` Probes don't count as evidence until proven live (`probe_liveness.sh` or the four cheap
+  methods: behavioral / kernel-name / differential cases — differential preferred).
+- `3.2` Measured two-arm difference smaller than structural difference ⇒ suspect the probe first.
+- `3.3` The control arm proves reproducibility, not validity.
+- `3.4` A green light proves "the path taken was correct," not "which path was taken";
+  performance gates don't validate numbers.
+- `3.5` "Do less work" probes must pre-register their claim and pass the accuracy gate first.
+- `3.6` Can't prove liveness ⇒ mark `INVALID`, never `refuted`.
+- `3.7` Under concurrency, "device idle" is not a mutex criterion — locks are; short tasks never
+  queue behind long ones.
 
-## 4. 失败归并与停滞触发 —— 规则索引（详见 `references/rules-ch4-counting.md`）
+## 4. Failure merging & stall triggers — rule index (see `references/rules-ch4-counting.md`)
 
-- `4.1`/`4.2` "3 战术=1 架构""累计 2 架构即停"是标定值非推导值，仅作粗启发。
-- `4.3` **停滞触发器**：同一组失败用例连续 3 轮未移动（成员+缺口）⇒计 1 次框架失败。
-- `4.4` 每次实验后抄下失败集合（逐例列名）。
-- `4.5` 开跑前先写"若有效，失败集合会怎么变"；无信息量的改动不开跑。
-- `4.6` **量级外推**：按最近 k 轮平均缩小量外推，预算内到不了⇒路径不可达（唯一不需先自我怀疑的触发器）。
+- `4.1`/`4.2` "3 tactics = 1 architecture" and "stop at 2 cumulative architectures" are calibrated
+  values, not derived ones — rough heuristics only.
+- `4.3` **Stall trigger**: the same failing-case group unmoved for 3 consecutive rounds
+  (members + gap) ⇒ counts as 1 framework failure.
+- `4.4` After every experiment, copy down the failure set (name each case).
+- `4.5` Before a run, write "if this works, how will the failure set change?"; changes with no
+  information content don't run.
+- `4.6` **Magnitude extrapolation**: extrapolate by the average shrink of the last k rounds;
+  if it can't arrive within budget ⇒ the path is unreachable (the only trigger that doesn't
+  require self-doubt first).
 
-## 5. 耗尽触发器 —— 规则索引（详见 `references/rules-ch5-exhaustion.md`）
+## 5. Exhaustion triggers — rule index (see `references/rules-ch5-exhaustion.md`)
 
-- `5.1` 忙管 >95% + 实际发出工作==算法下界 + 结构项全排除 ⇒ 禁止微杠杆实验，只能换家族或去对标。
-- `5.2` "这条路径已耗尽"≠"这个问题不可解"，差一个"换形状"动作。
-- `5.3` `blocked` 是状态不是决定；终止要交三样：重启条件/接手路径/移交对象。
+- `5.1` Busy-pipe >95% + actual issued work == algorithmic lower bound + all structural items
+  excluded ⇒ micro-leverage experiments forbidden; only family switches or benchmarking allowed.
+- `5.2` "This path is exhausted" ≠ "this problem is unsolvable" — one "change the shape" action apart.
+- `5.3` `blocked` is a state, not a decision; terminating requires three things: restart
+  conditions / takeover path / handoff recipient.
 
-## 6. 对标侦察 —— 规则索引（规则见 `references/rules-ch6-recon.md`，方法指南见 `references/upstream-recon.md`）
+## 6. Upstream recon — rule index (rules in `references/rules-ch6-recon.md`, method guide in `references/upstream-recon.md`)
 
-- `6.1` 关键路径不得经过"可能不存在的外部 artifact"。
-- `6.2` 信源按可得性排序：兄弟算子 > 相邻形状段自己 A/B > 上游文档 > 竞品提交；两个强制时点（第 0 天/第一个用例失败时）。
-- `6.3` 邻居的存在性证明就是证据；"不适用"必须有证据否则是未验证假设。
-- `6.4` 分档应当是推导的（容量/位宽约束），手调表是技术债。
-- `6.5` 对标数字同样过 §2 与 §3（主语齐全、同一参照物）。
+- `6.1` The critical path must not pass through "possibly nonexistent external artifacts."
+- `6.2` Sources ranked by availability: sibling operators > own A/B on adjacent shape segments >
+  upstream docs > competitor commits; two mandatory points (day 0 / first case failure).
+- `6.3` A neighbor's existence proof is evidence; "not applicable" needs evidence too, otherwise
+  it's an unverified assumption.
+- `6.4` Tiers should be derived (capacity/bit-width constraints); hand-tuned tables are tech debt.
+- `6.5` Benchmark numbers go through §2 and §3 as well (subjects complete, same reference).
 
-## 7. 自我否证 —— 规则索引（详见 `references/rules-ch7-self-falsify.md`）
+## 7. Self-falsification — rule index (see `references/rules-ch7-self-falsify.md`)
 
-- `7.1` 每次重锚定必须回答：最不确定的旧结论是哪条、什么证据能推翻它。
-- `7.2` 结论标签只四种：`已实测`/`已被独立复核`/`未受攻击`/`INVALID`；自己没被挑战过的只能标`未受攻击`。
-- `7.3` 新证据推翻旧结论时去改旧文档加更正横幅，禁静默取代；检查派生文档是否复制了被推翻的结论。
+- `7.1` Every re-anchoring must answer: which old conclusion is least certain, and what evidence
+  would overturn it.
+- `7.2` Conclusion labels, only four: `measured` / `independently reviewed` / `unchallenged` /
+  `INVALID`; anything you haven't challenged yourself can only be `unchallenged`.
+- `7.3` When new evidence overturns an old conclusion, edit the old doc with a correction banner —
+  no silent replacement; check whether derived docs copied the overturned conclusion.
 
-## 8. 独立审计 —— 规则索引（详见 `references/rules-ch8-audit.md`）
+## 8. Independent audit — rule index (see `references/rules-ch8-audit.md`)
 
-- `8.1` 主攻手不得自审；独立上下文承担审计；推翻结论的必须是新证据不是语气；审计者必须报告自己撤回了什么。
-- 审计者只读原始数据不读总结；主动找反例；逐条查对比主语、探针生效、台账 derived_from 完备与失效传播（跑 `claims_lint.py`，不要靠读）。
+- `8.1` The main attacker never audits themselves; an independent context does the audit;
+  only new evidence — not tone — overturns conclusions; the auditor must report what they retracted.
+- The auditor reads raw data, not summaries; actively hunts counterexamples; checks item by item:
+  comparison subjects, probe liveness, ledger derived_from completeness and invalidation
+  propagation (run `claims_lint.py`, don't eyeball it).
 
-## 9. 完成判据 —— 规则索引（详见 `references/rules-ch9-completion.md`）
+## 9. Completion criteria — rule index (see `references/rules-ch9-completion.md`)
 
-- `9.1` 宣布完成必须逐字重述验收判据并给出实测值比对；"已达成"/"接近"/"未达成"三句只能用第一句。
-- `9.2` 噪声型判据的收尾规则必须冲线前写下并获批；只许改进估计量不许放宽语义。
-- `9.3` 通过数高≠正确；宣布接近前确认是在数值正确的内核上取得的。
+- `9.1` Declaring done requires restating the acceptance criteria verbatim with measured-value
+  comparison; of "achieved" / "close" / "not achieved," only the first may be used.
+- `9.2` Wind-down rules for noisy criteria must be written and approved before the finish line;
+  you may improve the estimator, never relax the semantics.
+- `9.3` High pass counts ≠ correct; before claiming "close," confirm it was achieved on a
+  numerically correct kernel.
 
-## 10. 状态机制 —— 双轨（详见 `references/state.md` + `state-files.md`）
+## 10. State mechanism — dual track (see `references/state.md` + `state-files.md`)
 
-- **机器轨**：`state.json` 是每轮必读的唯一对象（固定 schema + 稀疏补丁 + 校验门，见 `references/state-schema.md`）；`CLAIMS.jsonl` 是证据真相源（替代散文 TRUTH）。
-- **人读轨**：`STATE.md`（当前快照视图）、`CANDIDATES.md`（候选台账）、`PLAN.md`（检查点）、`REVIEW.md`（独立评审结论）、`METRICS.md`（记分牌）、`HANDOFF.md`（恢复路径）、`HARDSET.md`（困难集）、`EVENTS.md`（增量日志）。
-- **契约**：JSON 是真相源，Markdown 是派生视图；同一事实只允许一处权威，其余处写编号引用（`2.5.3`）。
+- **Machine track**: `state.json` is the single object read every round (fixed schema + sparse
+  patches + validation gate, see `references/state-schema.md`); `CLAIMS.jsonl` is the evidence
+  source of truth (replaces prose TRUTH).
+- **Human track**: `STATE.md` (current snapshot view), `CANDIDATES.md` (candidate ledger),
+  `PLAN.md` (checkpoints), `REVIEW.md` (independent review verdicts), `METRICS.md` (scoreboard),
+  `HANDOFF.md` (recovery path), `HARDSET.md` (hard set), `EVENTS.md` (incremental log).
+- **Contract**: JSON is the source of truth, Markdown is the derived view; each fact has exactly
+  one authority, everywhere else cites by number (`2.5.3`).
 
-## 11. 每轮闭环 —— 规则索引（详见 `references/round-loop.md`）
+## 11. Per-round loop — rule index (see `references/round-loop.md`)
 
-每轮只执行一个最高价值闭环，分两层：
+Each round executes exactly one highest-value loop, in two layers:
 
-- **外循环（任务轮）**：重锚定 → 读 `state.json` → 分类 → 验基线 → 归因 → 可证伪候选 → 分层验证 → 门禁裁决 → 决断（promote/iterate/revert/park/close）→ 持久化（状态补丁+台账）→ 赛马复盘点。
-- **内循环（实验轮）**：假设 → 预注册 → 查环境/锁 → **装置门** → 精度门→性能门 → 对照测量 → 结论六选一 → 失败先归档 → 抄失败集合 → 提交状态补丁 → 更新台账。
-- 只有验收口径冲突 / 不可逆高成本操作 / 目标资源缺失 / 连续失败要换目标时升级给用户，并附：当前目标、已验证事实、已关闭路线、最小请求、默认建议。
+- **Outer loop (task round)**: re-anchor → read `state.json` → classify → verify baseline → attribute →
+  falsifiable candidate → layered verification → gate verdict → decide (promote/iterate/revert/park/close) →
+  persist (state patch + ledger) → racing retro point.
+- **Inner loop (experiment round)**: hypothesis → pre-register → check environment/locks →
+  **apparatus gate** → accuracy gate → performance gate → controlled measurement → six-way conclusion →
+  archive failures first → copy failure set → submit state patch → update ledger.
+- Escalate to the user only on: acceptance-criteria conflict / irreversible high-cost operations /
+  missing goal resources / consecutive failures requiring a goal change — with: current goal,
+  verified facts, closed routes, minimal request, default recommendation.
 
-## 12. 赛马纪律 —— 规则索引（详见 `references/racing.md`）
+## 12. Racing discipline — rule index (see `references/racing.md`)
 
-- `12.1` 多候选并行用 git worktree（同一机器零成本）；稀缺硬件只给决赛圈。
-- `12.2` 每 N 轮（建议 5）强制看记分牌，kill 落后者；被 kill 的留下失败家族与重开条件。
-- `12.3` 新 agent 第一纪律：验证而不是相信（复算 hash、重跑最小 smoke 再续旧路线）。
+- `12.1` Race multiple candidates with git worktree (zero cost on one machine); scarce hardware
+  goes to the finals only.
+- `12.2` Every N rounds (5 recommended), force a scoreboard review and kill laggards; the killed
+  leave behind their failure family and reopen conditions.
+- `12.3` A new agent's first discipline: verify, don't trust (recompute hashes, re-run minimal
+  smoke before continuing an old route).
 
-## 13. 文件财政纪律 —— 规则索引（详见 `references/file-hygiene.md`）
+## 13. File-hygiene discipline — rule index (see `references/file-hygiene.md`)
 
-- `13.1` 目录契约：`mission/` 只放固定名单文件；实验产物进 `scratch/<候选id>/`，候选关闭即归档/删除；`research/` 文件必须带"来源+日期+一句话结论"头。
-- `13.2` 搜索配额：每轮联网搜索/爬取有上限；`research/` 超量先消化不许新搜；工具降级链：官方文档/API > curl > 爬虫 > 浏览器自动化。
-- `13.3` 远端隔离：SSH 远端只跑代码不写笔记；只取回证据文件；任务结束清空远端工作区。
+- `13.1` Directory contract: `mission/` holds only the fixed file list; experiment artifacts go to
+  `scratch/<candidate-id>/`, archived/deleted when the candidate closes; `research/` files must
+  carry a "source + date + one-line conclusion" header.
+- `13.2` Search quota: each round's web search/scraping has a cap; when `research/` overflows,
+  digest first, no new searches; tool downgrade chain: official docs/API > curl > scraper > browser automation.
+- `13.3` Remote isolation: SSH remotes run code only, never notes; fetch back evidence files only;
+  clear the remote workspace when the task ends.
 
-## 14. 困难集 —— 规则索引（详见 `references/hard-set.md`）
+## 14. Hard set — rule index (see `references/hard-set.md`)
 
-- `14.1` 准入：≥2 种结构路线试过仍不过、常规优化只有个位数改善、失效机制与众不同 ⇒ 移入 `HARDSET.md` 独立管理；不参与日常评分。
-- `14.2` 爆破只允许结构级实验（换算法/布局/执行结构），禁参数扫描。
-- `14.3` 连续 N 轮（建议 5）整体只有个位数增长且困难集不动 ⇒ 停参数优化，强制引入新算法家族，先在困难集验证。
+- `14.1` Admission: ≥2 structural routes tried and still failing, conventional optimization yields
+  only single-digit gains, unusual failure mechanism ⇒ moves to `HARDSET.md` under independent
+  management; excluded from daily scoring.
+- `14.2` Breakthroughs allow structural experiments only (change algorithm/layout/execution
+  structure); parameter sweeps forbidden.
+- `14.3` N consecutive rounds (5 recommended) with only single-digit overall gains and an unmoved
+  hard set ⇒ stop parameter tuning, force a new algorithm family, validate on the hard set first.
 
-## 15. Profile 机制
+## 15. Profile mechanism
 
-内核领域无关、模型/harness 无关（声明式：验收什么，而非点哪个按钮）。
-领域专属细节下沉为 `references/profiles/<name>.md`（+ 可选 `<name>.tools.json`），
-按需加载。示例：`profiles/ascend-cann.md`（数值门禁细节、NPU 优化 playbook、
-官方工具清单）——它证明"领域无关"不是空话。
+Core is domain-agnostic and model/harness-agnostic (declarative: what to accept, not which button
+to click). Domain specifics sink into `references/profiles/<name>.md` (plus optional
+`<name>.tools.json`), loaded on demand. Example: `profiles/ascend-cann.md` (numeric gate details,
+NPU optimization playbook, official tool list) — proof that "domain-agnostic" isn't empty talk.
 
-## 工具（L3）
+## Tools (L3)
 
-| 脚本 | 分工 | 用法 |
+| Script | Role | Usage |
 |---|---|---|
-| `init_mission.py` | **脚手架**：建任务目录与模板 | `--mission/--goal/--acceptance [--profile]` |
-| `mission_lint.py` | **脚手架**：结构 lint（缺文件/占位符/HANDOFF 过期/scratch 孤儿/research 超量） | `<mission>`；返回码非 0 即有问题 |
-| `discover_environment.py` | **脚手架**：只读环境发现（profile 驱动） | `[--profile]` |
-| `new_candidate.py` | **脚手架**：登记可证伪候选 | 交互或参数 |
-| `state_patch.py` | **状态**：读写 `state.json` 稀疏补丁 | `--state/--patch/--show`；`--self-test` |
-| `claims_lint.py` | **证据**：`CLAIMS.jsonl` 六条机械检查 | `--ledger [--doc]... [--strict]`；`--self-test` |
-| `probe_liveness.sh` | **证据**：探针生效性结构检查 | `--src/--func/--probe/--target`；退出码 0/1/2 |
+| `init_mission.py` | **Scaffolding**: create mission dir and templates | `--mission/--goal/--acceptance [--profile]` |
+| `mission_lint.py` | **Scaffolding**: structural lint (missing files/placeholders/stale HANDOFF/scratch orphans/research overflow) | `<mission>`; nonzero exit means problems |
+| `discover_environment.py` | **Scaffolding**: read-only environment discovery (profile-driven) | `[--profile]` |
+| `new_candidate.py` | **Scaffolding**: register a falsifiable candidate | interactive or args |
+| `state_patch.py` | **State**: read/write `state.json` sparse patches | `--state/--patch/--show`; `--self-test` |
+| `claims_lint.py` | **Evidence**: six mechanical checks on `CLAIMS.jsonl` | `--ledger [--doc]... [--strict]`; `--self-test` |
+| `probe_liveness.sh` | **Evidence**: structural probe-liveness check | `--src/--func/--probe/--target`; exits 0/1/2 |
 
-分工一句话：**脚手架管"任务长什么样"，状态/证据工具管"世界是什么样"**。
-写工具本身也受本规程约束：判据上线前必须跑过"已知应报错/已知应通过"双样本。
+One line per role: **scaffolding owns "what the task looks like," state/evidence tools own "what the world looks like."**
+Tooling itself is bound by this protocol: before a criterion ships, it must pass both a
+"known-should-fail" and a "known-should-pass" sample.
 
-## 独立审计者
+## Independent auditor
 
-角色定义见 `agents/long-horizon-auditor/AGENT.md`（职责见 §8）。
-`agents/openai.yaml` 为 Codex 等 agent 的引导入口。
+Role definition: `agents/long-horizon-auditor/AGENT.md` (duties in §8).
+`agents/openai.yaml` is the entry point for Codex-class agents.
