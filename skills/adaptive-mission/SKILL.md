@@ -2,6 +2,7 @@
 name: adaptive-mission
 description: >-
   以最小计划驱动长期、需求易漂移的工程与研究任务（竞赛算子开发、硬件联调、AI 平台集成、跨周交付等）：先澄清方向，用 3-5 个检查点和出口证据推进，每轮回到澄清重新核对任务书/验收标准是否已变；用 STATE/TRUTH/PLAN/REVIEW 轻量记录管理状态、事实来源、可弃计划和验收证据；按需启用 Driver/Specialist/Reviewer/Guard 子 agent；真实环境验证后才算完成。适合任务书隔几天就可能修改、细节不能过早固化、需要持续攻坚与可追溯证据的场景。
+  Model-invoked：任务预计跨多天/多轮推进、或任务书/验收标准可能变化时自动加载。
 ---
 
 # Adaptive Mission

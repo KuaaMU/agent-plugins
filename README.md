@@ -33,6 +33,7 @@ claude plugin install mcp-vision-bridge
 
 | If you are… | Take |
 |---|---|
+| Not sure which skill fits — let the router decide | **router** (user-invoked) |
 | Tackling a hard numeric target over days/weeks (pass rate, latency) and keep "making progress" without converging | **long-horizon-skills** |
 | Running a long engineering or research mission and need drift-proof checkpoints | **adaptive-mission** |
 | Turning finished work into lessons, briefs, or publishable artifacts | **work-output** |
@@ -42,6 +43,7 @@ claude plugin install mcp-vision-bridge
 
 | Skill | What it does |
 |---|---|
+| [router](skills/router) | **User-invoked** skill router: when you don't know which skill fits, invoke it and it routes you (or tells you none fits). Also documents the repo-wide trigger policy. |
 | [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3–5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, real-environment acceptance. |
 | [long-horizon-skills](skills/long-horizon-skills) | Anti-failure + execution system for hard numeric targets over weeks: six failure modes (framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, evidence mismatch), trigger-style rules, independent auditor, JSON state machine, racing discipline, file hygiene, hard-set, and domain profiles. |
 | [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. |

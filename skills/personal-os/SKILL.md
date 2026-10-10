@@ -2,6 +2,7 @@
 name: personal-os
 description: >-
   个人数据仓库的方法论（开源）：用 GitHub 私人仓 + AGENTS.md 跨 AI 标准入口 + markdown，让任何 AI 都能无缝接手你的长期记忆、决策、项目与想法。包含新 AI 上手协议、会话结束落盘纪律、记忆策展三条杠（Verified/Reusable/Stable）、安全红线，以及 node/sh 双版本的 vault 健康检查脚本。方法论是公共品，数据永远私有。
+  Model-invoked：新会话启动时自动加载（会话启动协议）。
 ---
 
 # personal-os
