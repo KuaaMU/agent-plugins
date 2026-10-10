@@ -35,6 +35,7 @@ claude plugin install mcp-vision-bridge
 |---|---|
 | Not sure which skill fits — let the router decide | **router** (user-invoked) |
 | About to claim "done / fixed / faster" — verify first | **verify-first** (model-invoked) |
+| Want to actually understand the project while shipping, let AI mentor you | **shadow-mentor** (user-invoked) |
 | Tackling a hard numeric target over days/weeks (pass rate, latency) and keep "making progress" without converging | **long-horizon-skills** |
 | Running a long engineering or research mission and need drift-proof checkpoints | **adaptive-mission** |
 | Turning finished work into lessons, briefs, or publishable artifacts | **work-output** |
@@ -46,6 +47,7 @@ claude plugin install mcp-vision-bridge
 |---|---|
 | [router](skills/router) | **User-invoked** skill router: when you don't know which skill fits, invoke it and it routes you (or tells you none fits). Also documents the repo-wide trigger policy. |
 | [verify-first](skills/verify-first) | **Model-invoked** verification discipline micro-skill: 5-step loop (define evidence → real environment → raw output → discriminability check → seek counterexamples) before claiming anything works, plus a rationalization pre-buttal table. |
+| [shadow-mentor](skills/shadow-mentor) | **User-invoked** cognitive-alignment skill: while the main coding agent ships, a shadow agent (read-only worktree) mentors you — 4 questions (big picture / why-it-exists / alternatives / frontier), 3 modes (checkpoint briefings / ask-anytime / Feynman checks). Core ideas: 认知对齐 + 让 AI 带你成长. |
 | [adaptive-mission](skills/adaptive-mission) | Minimal-plan, drift-tolerant workflow for long engineering and research missions: 3–5 checkpoints, STATE/TRUTH/PLAN/REVIEW records, optional subagents, real-environment acceptance. |
 | [long-horizon-skills](skills/long-horizon-skills) | Anti-failure + execution system for hard numeric targets over weeks: six failure modes (framework lock-in, self-confirmation bias, goal drift, dead apparatus, gate-semantics drift, evidence mismatch), trigger-style rules, independent auditor, JSON state machine, racing discipline, file hygiene, hard-set, and domain profiles. |
 | [work-output](skills/work-output) | Distill any task into four-track outputs: deliverables, reproducible process traces, reusable lessons, and publishable artifacts. |

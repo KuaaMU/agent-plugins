@@ -29,6 +29,8 @@ disable-model-invocation: true
    → 先 **adaptive-mission** 定方向、管漂移，进入攻坚阶段切 **long-horizon-skills**。
 6. 都不像？
    → 不用 skill，直接干。
+7. 想在主线交付的同时真正搞懂它、让 AI 带你成长？
+   → **shadow-mentor**（影子学习线，与主线并行，互不干扰）。
 
 ## 全仓触发策略（一览）
 
@@ -40,6 +42,7 @@ disable-model-invocation: true
 | long-horizon-skills | model-invoked | 触发条件是客观的（硬指标/≥5 实验/接手旧树），命中即加载 |
 | personal-os | model-invoked | 会话启动协议，任何 AI 开工前都该先读它 |
 | verify-first | model-invoked | 验证是纪律不是编排：准备宣布结论时自动上马，不等人想起来 |
+| shadow-mentor | user-invoked | 学什么是你的主动决定；影子线只在你需要"懂"时出现，不打扰主线 |
 
 ## 反模式
 
